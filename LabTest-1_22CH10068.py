@@ -10,24 +10,16 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 
 
 # Function to calculate accuracy :
-def accuracy(y_t, y_p):
-    y_t = np.array(y_t)
-    y_p = np.array(y_p)
-    ind = 0
-    correct = 0
-    # If the predicted values is less than 0.5 it is classified as 0 else 1:
-    for x in y_p:
-        if x <= 0.5:
-            if y_t[ind] == 0:
-                correct += 1
-        else:
-            if y_t[ind] == 1:
-                correct += 1
-        ind += 1
-    return (correct / len(y_t)) * 100
+def accuracy(y_true, y_pred):
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    y_pred_class = (y_pred > 0.5).astype(int)
+    correct = np.sum(y_true == y_pred_class)
+    return (correct / len(y_true)) * 100
 
 
 # Implementation of closed form linear regression:
@@ -109,6 +101,15 @@ print("The Percentage accuracy on testing data :")
 print(accuracy(y_test, y_pred_test))
 
 # Printing the confusion matrix:
+y_pred_test_bi = [1 if x > 0.5 else 0 for x in y_pred_test]
+cm = confusion_matrix(y_test , y_pred_test_bi)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, cmap='Blues', fmt='g', cbar=False)
+
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
 
 # Experiment 4 :
 
@@ -154,3 +155,14 @@ print(accuracy(y_train, y_pred_train_a))
 
 print("The Percentage accuracy on testing data :")
 print(accuracy(y_test, y_pred_test_a))
+
+# Printing the confusion matrix:
+y_pred_test_a_bi = [1 if x > 0.5 else 0 for x in y_pred_test_a]
+cm = confusion_matrix(y_test , y_pred_test_a_bi)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, cmap='Blues', fmt='g', cbar=False)
+
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
